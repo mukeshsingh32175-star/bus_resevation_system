@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-int choice2, choice3, bus_number, seat_number, total_seats = 50, booked_seat, avilabe_seat, MONEY = 500, cseat;
+int choice2, choice3, bus_number, seat_number, total_seats = 50,  avilabe_seat,cflag=0, cancel_seat, MONEY = 500, cseat;
+char usr_name[10];
 int sign()
 {
 
     while (1)
     {
-        int flag = 0, board = 0, at = -1, dot = -1,aplabet=0,digit=0,special=0;
+        int flag = 0, board = 0, at = -1, dot = -1, aplabet = 0, digit = 0, special = 0;
         char name[11], mobile_number[11], email[50], password[11];
         printf("\n*****SIGN_IN******");
         printf("\nenter your name: ");
@@ -43,6 +44,11 @@ int sign()
             printf("\nMOBILE_NUM_CONTAIN_MIN_10_DIGIT___!");
             continue;
         }
+        else if (mobile_number[0] == '0')
+        {
+            printf("\n !...MOBILE_CAN'T_BE_ZEERO..!\n");
+            continue;
+        }
         for (int i = 0; i < 10; i++)
         {
             if (!isdigit(mobile_number[i]) != 0)
@@ -63,7 +69,8 @@ int sign()
         {
             if (email[i] == ' ')
             {
-                printf("Invalid Email\n");
+                printf("!...Error....!");
+                printf("Invalid Email....!\n");
             }
 
             if (email[i] == '@')
@@ -74,9 +81,8 @@ int sign()
         }
 
         if (at > 0 && dot > at + 1)
-          {
-         
-          }
+        {
+        }
 
         else
         {
@@ -91,19 +97,19 @@ int sign()
             printf("\nPASSWORD_CONTAIN_CHAR&DIGIT_BITWEEN_FOuR_TO_EIGHT.......!");
             continue;
         }
-        for (int i = 0; i <password[i]; i++)
+        for (int i = 0; i < password[i]; i++)
         {
-           if( (password[i] >= 'A' && password[i] <= 'Z')  || (password[i] >= 'a' && password[i] <= 'z'))
-            aplabet = 1;
-        else if (password[i] >= '0' && password[i] <= '9')
-            digit = 1;
-        else if (password[i] == '@' || password[i] == '#' ||
-                 password[i] == '$' || password[i] == '%' ||
-                 password[i] == '&' || password[i] == '!')
-            special = 1;    
+            if ((password[i] >= 'A' && password[i] <= 'Z') || (password[i] >= 'a' && password[i] <= 'z'))
+                aplabet = 1;
+            else if (password[i] >= '0' && password[i] <= '9')
+                digit = 1;
+            else if (password[i] == '@' || password[i] == '#' ||
+                     password[i] == '$' || password[i] == '%' ||
+                     password[i] == '&' || password[i] == '!')
+                special = 1;
         }
-        if( aplabet && digit && special)
-         {
+        if (aplabet && digit && special)
+        {
             printf("\n*****SUCESSFULLY_SIGN_IN_WELCOME___%s ****\n ", name);
             break;
         }
@@ -146,6 +152,9 @@ int user_menu()
 }
 int uttrakhand()
 {
+    while (1)
+    {
+       
 
     int choicenum;
     printf("\n*****DELHI_TO_UTTRAKHAND_ROADWAYS******");
@@ -165,6 +174,7 @@ int uttrakhand()
         printf("\n2. 1013       40      9:00am  ");
         printf("\n3. 1014       30     10:00am  ");
         printf("\n4. 1015       20      12:00am  ");
+        break;
     }
     else if (choicenum == 2)
     {
@@ -175,26 +185,60 @@ int uttrakhand()
         printf("\n2. 1053       40      9:00am  ");
         printf("\n3. 1064       30     10:00am  ");
         printf("\n4. 1075       20      12:00am  ");
+        break;
     }
-    else
+    else if(choicenum>2 &&  choicenum < 5)
     {
         printf("\n!....sorry_for_intrupt_we_don't_have_avilable_bus....!");
+        continue;
+    }
+    else{
+        printf("!..Error..!");
+        continue;
+    }
     }
 }
 
+
 int book_ticket()
 {
-    printf("\nENTER _YOUR_BUS_NUMBER: ");
-    scanf("%d", &bus_number);
-
-    printf("\nenter the numbers of seats: ");
-    scanf("%d", &seat_number);
-    if (seat_number > total_seats)
+    while (1)
     {
-        printf("!__we_don't_have_avilable_that_much_seat___!");
+        cflag = 0;
+
+        printf("\nEnter your name: ");
+        scanf("%s", usr_name);
+
+        for (int i = 0; usr_name[i] != '\0'; i++)
+        {
+            if (!isalpha(usr_name[i]))
+            {
+                printf("\n!...ERROR...!");
+                printf("\nName must contain only alphabets!\n");
+                cflag = 1;
+                break;
+            }
+        }
+
+        if (cflag)
+            continue;
+
+        printf("\nENTER _YOUR_BUS_NUMBER: ");
+        scanf("%d", &bus_number);
+
+        printf("\nenter the numbers of seats: ");
+        scanf("%d", &seat_number);
+        if (seat_number > total_seats)
+        {
+            printf("!__we_don't_have_avilable_that_much_seat___!");
+            continue;
+        }
+    
+        avilabe_seat = total_seats - seat_number;
+        printf("\n***BOOKING_SUCESSFULLY ! %d,SEAT_BOOK_ON_THE_BUS_NUM_%d******", seat_number, bus_number);
+        break;
+    
     }
-    avilabe_seat = total_seats - seat_number;
-    printf("\n***BOOKING_SUCESSFULLY ! %d,SEAT_BOOK_ON_THE_BUS_NUM_%d******", seat_number, bus_number);
 
     return 0;
 }
@@ -203,38 +247,59 @@ int cencel_ticket()
     int cseat;
     printf("how many seat you want to cancel: ");
     scanf("%d", &cseat);
-    avilabe_seat = total_seats + cseat;
+    seat_number -= cseat;
+    total_seats += cseat;
+   
     printf("\n%d_CANCELLED !", cseat);
-    printf("\n***CENCEL_SUCESSFULLY ! %d,SEAT_cancel_ON_THE_BUS_NUM_%d******", cseat, bus_number);
-
+    printf("\n***CENCEL_SUCESSFULLY ! %d,SEAT_cancel_ON_THE_BUS_NUM_%d******");
     return 0;
 }
 int bus_status()
 {
     printf("\n*****BUS__STATUS*****");
-    printf("\nAVILABLE_SEAT------%d", avilabe_seat);
+    printf("\nPassanger_name-------%s",&usr_name);
+    printf("\nAVILABLE_SEAT------%d", total_seats);
     printf("\nBOOKED-SEAT------%d", seat_number);
     printf("\nper_seat------------%d", MONEY);
     return 0;
 }
 int payment()
-{
+{  
+    while (1)
+    {
+        
     int payment, pay_choice, total_money;
     printf("\n1.PAYTEM");
     printf("\n2.G_PAY");
     printf("\nwhich_type_of_pament_would_you_like_to_do: ");
     scanf("%d", &payment);
-    if (pay_choice == 1)
+    if (pay_choice = 1)
     {
         total_money = 500 * seat_number;
         printf("\nTOTAL_MONEY_YOU_HAVE_TO_PAY:%d", total_money);
         printf("\nYOU_HAVE_TO_PAY_ON_THIS_NUM == 7668660825 ");
+        break;
     }
-
+    else if (pay_choice = 2)
+    {
+         total_money = 500 * seat_number;
+        printf("\nTOTAL_MONEY_YOU_HAVE_TO_PAY:%d", total_money);
+        printf("\nYOU_HAVE_TO_PAY_ON_THIS_NUM == 7668660825 ");
+        break;
+    }
+    else
+    {
+        printf("!...Error...!");
+        continue;
+    }
+  }
     return 0;
 }
 int uttarpradesh()
 {
+    while (1)
+    {
+       
     int choicenum;
     printf("\n*******DELHI_TO_UP_ROADWAYS*******");
     printf("1.DELHI_TO_AGARA  ");
@@ -243,18 +308,8 @@ int uttarpradesh()
     printf("4.DELHI_TO_VARANSI  ");
     printf("5.DELHI_TO_JAUNPUR ");
     printf("ENTER_YOUR_CHOICE: ");
-    scanf("%d",&choicenum);
-    if(choicenum=1)
-    {
-         printf("\n*****SECHUDULE*******");
-        printf("\n  BUS.NO   SEAT.AV   secudele ");
-        printf("\n1. 1023      50      8:00am  ");
-        printf("\n2. 1053       40      9:00am  ");
-        printf("\n3. 1064       30     10:00am  ");
-        printf("\n4. 1075       20      12:00am  ");
-
-    }
-    else if (choicenum==2)
+    scanf("%d", &choicenum);
+    if (choicenum = 1)
     {
         printf("\n*****SECHUDULE*******");
         printf("\n  BUS.NO   SEAT.AV   secudele ");
@@ -262,10 +317,22 @@ int uttarpradesh()
         printf("\n2. 1053       40      9:00am  ");
         printf("\n3. 1064       30     10:00am  ");
         printf("\n4. 1075       20      12:00am  ");
+        break;
+
+    }
+    else if (choicenum == 2)
+    {
+        printf("\n*****SECHUDULE*******");
+        printf("\n  BUS.NO   SEAT.AV   secudele ");
+        printf("\n1. 1023      50      8:00am  ");
+        printf("\n2. 1053       40      9:00am  ");
+        printf("\n3. 1064       30     10:00am  ");
+        printf("\n4. 1075       20      12:00am  ");
+        break;
 
  
     }
-    else if(choicenum==3)
+    else if (choicenum == 3)
     {
         printf("\n*****SECHUDULE*******");
         printf("\n  BUS.NO   SEAT.AV   secudele ");
@@ -273,30 +340,35 @@ int uttarpradesh()
         printf("\n2. 1553       40      9:00am  ");
         printf("\n3. 1904       30     10:00am  ");
         printf("\n4. 1005       20      12:00am  ");
+        break;
 
     }
-    else if (choicenum==4)
+    else if (choicenum == 4)
     {
-         printf("\n*****SECHUDULE*******");
+        printf("\n*****SECHUDULE*******");
         printf("\n  BUS.NO   SEAT.AV   secudele ");
         printf("\n1. 1003      50      8:00am  ");
         printf("\n2. 1543       40      9:00am  ");
         printf("\n3. 1964       30     10:00am  ");
         printf("\n4. 1205       20      12:00am  ");
+        break;
     }
-    else if (choicenum==5)
+    else if (choicenum == 5)
     {
-         printf("\n*****SECHUDULE*******");
+        printf("\n*****SECHUDULE*******");
         printf("\n  BUS.NO   SEAT.AV   secudele ");
         printf("\n1. 1008      50      8:00am  ");
         printf("\n2. 1503       40      9:00am  ");
         printf("\n3. 1904       30     10:00am  ");
         printf("\n4. 1275       20      12:00am  ");
+        break;
 
     }
     else{
         printf("!...ERROR..!");
+        continue;
     }
+ }
     
 }
 int himanchal()
@@ -335,7 +407,7 @@ int main()
             printf("\n******THANKS_FOR_VSIT_OUR_WEBSITE*******\n");
             break;
         }
-        else 
+        else
         {
             printf("\n!__ERROR__!");
             printf("\n!...enter_the_valid_number...!");
@@ -367,10 +439,9 @@ int main()
                 else if (choice2 == 2)
                 {
                     uttarpradesh();
-                     book_ticket();
-                   
+                    book_ticket();
                 }
-               
+
                 else if (choice2 >= 3 && choice2 <= 5)
                 {
                     printf("\n***THIS_TIME_WE_don't_have_avilable_bus_all_allredy_allbooked****");
@@ -379,6 +450,7 @@ int main()
                 else
                 {
                     printf("\n ****YOU_ENTERED_WRONG_CHOICE_!***");
+                    continue;
                 }
             }
             else if (choice3 == 2)
